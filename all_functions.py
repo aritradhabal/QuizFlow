@@ -4,7 +4,7 @@ import copy
 from google import genai
 from googleapiclient.discovery import build
 
-api_key = st.secrets['auth']['google']
+api_key = st.secrets['api']['google']
 
 def qs_setGenerator_llm(easy_qs, med_qs, hard_qs):
 
