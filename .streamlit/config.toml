@@ -1,0 +1,16 @@
+[server]
+enableStaticServing = true
+
+[[theme.fontFaces]]
+family = "geist"
+url = "app/static/Geist-VariableFont_wght.ttf"
+style = "normal"
+
+[[theme.fontFaces]]
+family = "geistmono"
+url = "app/static/GeistMono-VariableFont_wght.ttf"
+style = "normal"
+
+[theme]
+font = "geist"
+codeFont = "geistmono"
