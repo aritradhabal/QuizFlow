@@ -17,4 +17,10 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-st.title("QuizFlow.Ai", help = "", anchor=None)
+
+if st.user.is_logged_in != True:
+  st.title(":material/lock: Please login To Continue")
+else :
+    st.title("QuizFlow.Ai", anchor=None)
+    
+    

@@ -140,14 +140,12 @@ else :
         st.toast(f"**Failed to download this video. Please check the URL or try another one.**", icon="⚠️")
         url = ""
         st.session_state.last_url = url
-        time.sleep(4)
-        st.rerun()
+        st.stop()
       except Exception as e:
         st.toast(f"**Failed to download this video. Please check the URL or try another one.**", icon="⚠️")
         url = ""
         st.session_state.last_url = url
-        time.sleep(4)
-        st.rerun()
+        st.stop()
       
       return temp_filepath
 
@@ -228,7 +226,15 @@ else :
 
   def btn2():
     if easy_qs != st.session_state.easy_qs_last or med_qs != st.session_state.medium_qs_last or hard_qs != st.session_state.hard_qs_last or easy_qs_num != st.session_state.easy_qs_num_last or med_qs_num != st.session_state.medium_qs_num_last or hard_qs_num != st.session_state.hard_qs_num_last:
+      
+      st.session_state.easy_qs_last = easy_qs
+      st.session_state.medium_qs_last = med_qs
+      st.session_state.hard_qs_last = hard_qs
+      st.session_state.easy_qs_num_last = easy_qs_num
+      st.session_state.med_qs_num_last = med_qs_num
+      st.session_state.hard_qs_num_last = hard_qs_num
       st.session_state.btn2_clicked = True
+          
     st.session_state.btn1_color = "secondary" 
 
   def quiz():
@@ -240,7 +246,7 @@ else :
     
       st.write("Creating prompts :material/bolt:")
       all_qs_generated = qs_setGenerator_llm(easy_qs=easy_qs, med_qs=med_qs, hard_qs=hard_qs)
-      time.sleep(0.5)
+      time.sleep(1.5)
       st.write("Selecting questions :material/checklist_rtl:")
       ai_generated_qs = model_(all_qs_generated, transcript, easy_qs, med_qs, hard_qs)
       time.sleep(0.5)
@@ -255,6 +261,7 @@ else :
           hard_qs_num,
       )
       
+      time.sleep(1.5)
       st.write("Creating Google Form :material/add_to_drive:")
       get_result = auth_create(
           all_requests=all_requests,
@@ -265,7 +272,7 @@ else :
       quiz_status.update(
           label="Completed", state="complete", expanded=False
       )
-      time.sleep(0.5)
+      time.sleep(1.5)
       quiz_status.empty()
       
 
