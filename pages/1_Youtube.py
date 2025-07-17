@@ -13,6 +13,7 @@ from pydub import AudioSegment
 import time
 from yt_dlp import YoutubeDL
 import uuid
+from yt_dlp.utils import DownloadError
 
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())[:8]
@@ -132,9 +133,19 @@ else :
           }],
           'keepvideo': False,
       }
-
-      with YoutubeDL(ydl_opts) as ydl:
-          ydl.download([URL])
+      try:
+        with YoutubeDL(ydl_opts) as ydl:
+            ydl.download([URL])
+      except DownloadError as e:
+        st.toast("Failed to download this video. Please check the URL or try another one.", icon="⚠️")
+        st.exception(e)
+        time.sleep(4)
+        st.rerun()
+      except Exception as e:
+        st.toast("Failed to download this video. Please check the URL or try another one.", icon="⚠️")
+        st.exception(e)
+        time.sleep(4)
+        st.rerun()
       
       return temp_filepath
 
