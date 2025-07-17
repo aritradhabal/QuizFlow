@@ -379,7 +379,7 @@ else :
       if st.session_state.btn2_clicked == True:
         FormID, ResponderURL = quiz()
         st.markdown(f"### 📤 Share this Quiz: [{ResponderURL}]({ResponderURL})")
-        st.markdown(f"### 📝 Edit Your Form:[https://docs.google.com/forms/d/{FormID}/edit](https://docs.google.com/forms/d/{FormID}/edit)")
+        st.markdown(f"### 📝 Edit Your Form: [https://docs.google.com/forms/d/{FormID}/edit](https://docs.google.com/forms/d/{FormID}/edit)")
 
       
       
