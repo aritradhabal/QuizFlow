@@ -2,9 +2,14 @@ import streamlit as st
 import json
 import copy
 from google import genai
+import googleapiclient.discovery
+import googleapiclient.errors
 from googleapiclient.discovery import build
+from urllib.parse import urlparse, parse_qs
+
 
 api_key = st.secrets['api']['google']
+youtube_api = st.secrets['api']['youtube']
 
 def qs_setGenerator_llm(easy_qs, med_qs, hard_qs):
 
@@ -302,6 +307,120 @@ def model_text(all_generated_qs, everything, easy_qs, med_qs, hard_qs):
     Here is the paragraph -> {everything}
     '''
     
+    response = client.models.generate_content(
+        model="gemini-2.5-flash", contents=[prompt],
+    )
+    response = response.text
+    ai_generated_qs = json.loads(response.removeprefix('```json\n').removesuffix('\n```'))
+    return ai_generated_qs
+
+
+
+
+def get_youtube_id(url):
+    
+    if "youtu.be" in url:
+        return urlparse(url).path[1:]
+    if "youtube.com" in url:    
+        query = urlparse(url).query
+        params = parse_qs(query)
+        return params.get("v", [None])[0]
+    
+    return None
+
+
+def tags_string(tags):
+    tags_string = ""
+    for tag in tags:
+        tags_string += tag + ", "
+    tags_string=tags_string[:-2]
+    return tags_string
+
+def call_yt(url):
+    
+    var = get_youtube_id(url)
+    
+    if var!= None:
+        id = var
+    else:
+        st.toast(f"Incorrect video URL. Try again!",icon="🚫")
+        st.stop()
+    
+    
+    api_service_name = "youtube"
+    api_version = "v3"
+    API_KEY = youtube_api
+    
+    try:
+        youtube = googleapiclient.discovery.build(api_service_name, api_version, developerKey=API_KEY)
+        request = youtube.videos().list(
+            part="snippet",
+            id=id
+        )
+        response = request.execute()
+        title = response["items"][0]["snippet"]["title"]
+        tags = response['items'][0]['snippet']['tags']
+        tags = tags_string(tags)
+        return [title, tags]
+
+    except googleapiclient.errors.HttpError as e:
+        st.toast(f"**Can not get the video ID. Make sure the video ID publicly exist.**")
+        print(e)
+        st.stop()
+
+
+def model_yt(all_generated_qs, easy_qs, med_qs, hard_qs, title, tags):
+    client = genai.Client(api_key=api_key)
+    prompt = f'''YOUR ROLE: You are an expert content strategist and an Educator/Lecturer in University. You are provided a video title and it's tags.
+
+    YOUR PRIMARY TASK: Your task is twofold:
+    1.  First, based ONLY on the provided video title and tags, you must deduce the likely topics, key concepts, and potential arguments that would be covered in such a video.
+    2.  Second, using your deduction as the source material, generate single-answered multiple-choice questions as per the below requirements :
+        
+        Question Type: Multiple-choice
+        Answer Constraint: Only one correct answer
+        
+        -The EASY_QUESTIONS should be directly fact-based from the paragraph or topics (definitions, lists, simple concepts).
+        
+        -- DO NOT CHANGE THE JSON FORMAT
+
+        Question Type: Multiple-choice
+        Answer Constraint: Only one correct answer
+
+        -The MEDIUM_QUESTION should require some understanding or comparison between concepts.
+        
+        -- DO NOT CHANGE THE JSON FORMAT
+
+        Question Type: Multiple-choice
+        Answer Constraint: Only one correct answer    
+        
+        -The HARD_QUESTION should test deeper reasoning, critical thinking, or less directly stated ideas.
+        
+        -- DO NOT CHANGE THE JSON FORMAT
+        
+    Ensure that the questions are derived only from the topics of the paragraph.
+    
+    Provide exactly {easy_qs} easy questions, {med_qs} medium questions, and {hard_qs} hard questions from the paragraph.
+    
+    Use realistic and topic-relevant question titles and answer options, but preserve the JSON key names and structure exactly as provided.
+    
+    The "options" must be relevant choices.
+    
+    One "correct_answer" must exactly match one of the values in "options".
+    
+    "title" – A suitable full title for the quiz based on the topics.
+    "document_title" – A shorter version of the title, suitable for identifying the quiz file in Google Drive.
+    "description" – A one or two sentence description of what the quiz is about.
+    
+    Only return a valid JSON object in the **EXACT FORMAT** as provided, nothing else.
+    DO NOT CHANGE THE JSON FORMAT EVEN IF THIRD WORLD WAR HAPPENS. NEVER EVER CHANGE THE JSON FORMAT.
+    
+    Here is the JSON -> {all_generated_qs}
+    
+    Here is the Title -> {title}
+    Here are the Tags -> {tags}
+    '''
+   
     response = client.models.generate_content(
         model="gemini-2.5-flash", contents=[prompt],
     )
