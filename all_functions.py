@@ -150,7 +150,7 @@ def model_(all_generated_qs, everything, easy_qs, med_qs, hard_qs):
     
     client = genai.Client(api_key=api_key)
     
-    prompt = f'''You are an expert quiz generator. You will be given a lecture transcript as input. Your task is to generate a JSON file that contains single-answered multiple-choice questions based on that transcript. Based on the transcript, generate single-answered multiple-choice questions in the following strict JSON format. Do not include any explanation, headers, or extra text. Only return valid JSON. Do not change the structure or keys: 
+    prompt = f'''You are an expert quiz generator who is helping a university lecturer. You will be given a lecture transcript as input. Your task is to generate a JSON file that contains single-answered multiple-choice questions based on that transcript. Based on the transcript, generate single-answered multiple-choice questions in the following strict JSON format. Do not include any explanation, headers, or extra text. Only return valid JSON. Do not change the structure or keys: 
     Guidelines:
     
     Question Type: Multiple-choice
@@ -256,7 +256,7 @@ def model_text(all_generated_qs, everything, easy_qs, med_qs, hard_qs):
     
     client = genai.Client(api_key=api_key)
     
-    prompt = f'''You are an expert quiz generator. You will be given a paragraph, or a few topics as input. Your task is to generate a JSON file that contains single-answered multiple-choice questions based on those topics. Based on those topics, generate single-answered multiple-choice questions in the following strict JSON format. Do not include any explanation, headers, or extra text. Only return valid JSON. Do not change the structure or keys: 
+    prompt = f'''You are an expert quiz generator who is helping a university lecturer. You will be given a paragraph, or a few topics as input. Your task is to generate a JSON file that contains single-answered multiple-choice questions based on those topics. Based on those topics, generate single-answered multiple-choice questions in the following strict JSON format. Do not include any explanation, headers, or extra text. Only return valid JSON. Do not change the structure or keys: 
     Guidelines:
      
     Question Type: Multiple-choice
@@ -299,7 +299,6 @@ def model_text(all_generated_qs, everything, easy_qs, med_qs, hard_qs):
     
     Here is the JSON -> {all_generated_qs}
     
-    Identify and correct spelling mistakes in the paragraph below this line, using the most contextually appropriate words.
     Here is the paragraph -> {everything}
     '''
     
