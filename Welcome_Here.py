@@ -113,7 +113,7 @@ def google_token():
     else:
         now = time.time()
         user_token = st.session_state.user_token
-        if now > user_token['timestamp'] + 3000:
+        if now > user_token['timestamp'] + 3300:
             processed = user_token_google()
             if processed:
                 msg_toast.toast(f"Expired! Fetched New credentials for {st.user['given_name']}")
