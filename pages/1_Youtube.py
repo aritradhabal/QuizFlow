@@ -137,13 +137,15 @@ else :
         with YoutubeDL(ydl_opts) as ydl:
             ydl.download([URL])
       except DownloadError as e:
-        st.toast("Failed to download this video. Please check the URL or try another one.", icon="⚠️")
-        st.exception(e)
+        st.toast(f"**Failed to download this video. Please check the URL or try another one.**", icon="⚠️")
+        url = ""
+        st.session_state.last_url = url
         time.sleep(4)
         st.rerun()
       except Exception as e:
-        st.toast("Failed to download this video. Please check the URL or try another one.", icon="⚠️")
-        st.exception(e)
+        st.toast(f"**Failed to download this video. Please check the URL or try another one.**", icon="⚠️")
+        url = ""
+        st.session_state.last_url = url
         time.sleep(4)
         st.rerun()
       
