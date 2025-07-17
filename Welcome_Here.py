@@ -235,7 +235,7 @@ else:
     
     with e:
         if st.button(":material/wand_stars: Generate Yours", key = "switch", use_container_width=True,type="primary"):
-            st.switch_page("pages/1_Youtube.py")
+            st.switch_page("pages/1_Topics.py")
             
     with e:
         st.button(

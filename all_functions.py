@@ -155,12 +155,24 @@ def model_(all_generated_qs, everything, easy_qs, med_qs, hard_qs):
     
     Question Type: Multiple-choice
     Answer Constraint: Only one correct answer
-
+    
     -The EASY_QUESTIONS should be directly fact-based from the transcript (definitions, lists, simple concepts).
+    
+    -- DO NOT CHANGE THE JSON FORMAT
+    
+    Question Type: Multiple-choice
+    Answer Constraint: Only one correct answer
     
     -The MEDIUM_QUESTION should require some understanding or comparison between concepts.
     
+    -- DO NOT CHANGE THE JSON FORMAT
+    
+    Question Type: Multiple-choice
+    Answer Constraint: Only one correct answer
+    
     -The HARD_QUESTION should test deeper reasoning, critical thinking, or less directly stated ideas.
+    
+    -- DO NOT CHANGE THE JSON FORMAT
     
     Ensure that the questions are derived only from the content of the transcript.
     
@@ -244,13 +256,29 @@ def model_text(all_generated_qs, everything, easy_qs, med_qs, hard_qs):
     
     client = genai.Client(api_key=api_key)
     
-    prompt = f'''You are an expert quiz generator. You will be given a paragraph, or a few topics as input. Your task is to generate a JSON file that contains multiple-choice questions based on those topics. Based on those topics, generate multiple choice questions in the following strict JSON format. Do not include any explanation, headers, or extra text. Only return valid JSON. Do not change the structure or keys: 
+    prompt = f'''You are an expert quiz generator. You will be given a paragraph, or a few topics as input. Your task is to generate a JSON file that contains single-answered multiple-choice questions based on those topics. Based on those topics, generate single-answered multiple-choice questions in the following strict JSON format. Do not include any explanation, headers, or extra text. Only return valid JSON. Do not change the structure or keys: 
     Guidelines:
-    The EASY_QUESTIONS should be directly fact-based from the paragraph or topics (definitions, lists, simple concepts).
+     
+    Question Type: Multiple-choice
+    Answer Constraint: Only one correct answer
     
-    The MEDIUM_QUESTION should require some understanding or comparison between concepts.
+    -The EASY_QUESTIONS should be directly fact-based from the paragraph or topics (definitions, lists, simple concepts).
     
-    The HARD_QUESTION should test deeper reasoning, critical thinking, or less directly stated ideas.
+    -- DO NOT CHANGE THE JSON FORMAT
+
+    Question Type: Multiple-choice
+    Answer Constraint: Only one correct answer
+
+    -The MEDIUM_QUESTION should require some understanding or comparison between concepts.
+    
+    -- DO NOT CHANGE THE JSON FORMAT
+
+    Question Type: Multiple-choice
+    Answer Constraint: Only one correct answer    
+    
+    -The HARD_QUESTION should test deeper reasoning, critical thinking, or less directly stated ideas.
+    
+    -- DO NOT CHANGE THE JSON FORMAT
     
     Ensure that the questions are derived only from the topics of the paragraph.
     
@@ -270,6 +298,8 @@ def model_text(all_generated_qs, everything, easy_qs, med_qs, hard_qs):
     DO NOT CHANGE THE JSON FORMAT EVEN IF THIRD WORLD WAR HAPPENS. NEVER EVER CHANGE THE JSON FORMAT.
     
     Here is the JSON -> {all_generated_qs}
+    
+    Identify and correct spelling mistakes in the paragraph below this line, using the most contextually appropriate words.
     Here is the paragraph -> {everything}
     '''
     
