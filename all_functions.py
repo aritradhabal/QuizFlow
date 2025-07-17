@@ -377,7 +377,7 @@ def model_yt(all_generated_qs, easy_qs, med_qs, hard_qs, title, tags):
     1.  First, based ONLY on the provided video title and tags, you must deduce the likely topics, key concepts, and potential arguments that would be covered in such a video.
     2.  Second, using your deduction as the source material, generate single-answered multiple-choice questions as per the below requirements :
         
-        ***Each question must be grammatically correct, clearly worded, and well-formatted. Each question should have one unambiguous, correct answer only. The answer must be a single value — like a word, number, name, or phrase (no multi-part or open-ended answers). Do not repeat questions across sections.***
+        ***Each question must be grammatically correct, clearly worded, and well-formatted. Each question should have one unambiguous, correct answer only. The answer must be a single value — like a word, number, name, or phrase (no multi-part or open-ended answers). Do not repeat questions across sections. Questions should end with "?" mark.***
         ***DO NOT CHANGE JSON STRUCTURE OR KEYS***
 
         Question Type: Multiple-choice
