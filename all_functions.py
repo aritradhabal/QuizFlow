@@ -1,3 +1,4 @@
+from urllib import response
 import streamlit as st
 import json
 import copy
@@ -358,10 +359,15 @@ def call_yt(url):
             id=id
         )
         response = request.execute()
-        title = response["items"][0]["snippet"]["title"]
-        tags = response['items'][0]['snippet']['tags']
+        # title = response["items"][0]["snippet"]["title"]
+        # desc = response['items'][0]['snippet']["description"]
+        # tags = response['items'][0]['snippet']['tags']
+        title = response.get("items", [{}])[0].get("snippet", {}).get("title", " ")
+        desc = response.get("items", [{}])[0].get("snippet", {}).get("description", " ")
+        tags = response.get("items", [{}])[0].get("snippet", {}).get("tags", ["quiz"])
+
         tags = tags_string(tags)
-        return [title, tags]
+        return [title, desc, tags]
 
     except googleapiclient.errors.HttpError as e:
         st.toast(f"**Can not get the video ID. Make sure the video ID publicly exist.**")
@@ -369,9 +375,9 @@ def call_yt(url):
         st.stop()
 
 
-def model_yt(all_generated_qs, easy_qs, med_qs, hard_qs, title, tags):
+def model_yt(all_generated_qs, easy_qs, med_qs, hard_qs, title, desc, tags):
     client = genai.Client(api_key=api_key)
-    prompt = f'''YOUR ROLE: You are an expert content strategist and an Educator/Lecturer in University. You are provided a video title and it's tags.
+    prompt = f'''YOUR ROLE: You are an expert content strategist and an senior Educator/Lecturer in University. You are provided a video title and it's tags.
 
     YOUR PRIMARY TASK: Your task is twofold:
     1.  First, based ONLY on the provided video title and tags, you must deduce the likely topics, key concepts, and potential arguments that would be covered in such a video.
@@ -421,6 +427,7 @@ def model_yt(all_generated_qs, easy_qs, med_qs, hard_qs, title, tags):
     Here is the JSON -> {all_generated_qs}
     
     Here is the Title -> {title}
+    Here is the description -> {desc}
     Here are the Tags -> {tags}
     '''
    

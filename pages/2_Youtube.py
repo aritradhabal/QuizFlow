@@ -91,6 +91,8 @@ else :
     st.session_state.title = None
   if "tags" not in st.session_state:
     st.session_state.tags=None
+  if "desc" not in st.session_state:
+    st.session_state.desc=None
 # ------------------------------------------------#
 
   if "btn2_ytclicked" not in st.session_state:
@@ -335,7 +337,7 @@ else :
       all_qs_generated = qs_setGenerator_llm(easy_qs=easy_qs_yt, med_qs=med_qs_yt, hard_qs=hard_qs_yt)
       time.sleep(1.5)
       st.write("Selecting questions :material/checklist_rtl:")
-      ai_generated_qs = model_yt(all_qs_generated, easy_qs_yt, med_qs_yt, hard_qs_yt, st.session_state.title, st.session_state.tags)
+      ai_generated_qs = model_yt(all_qs_generated, easy_qs_yt, med_qs_yt, hard_qs_yt, st.session_state.title, st.session_state.desc, st.session_state.tags)
       time.sleep(0.5)
       st.write("Formatting requests :material/file_export:")
       all_requests = requests_set(
@@ -482,9 +484,10 @@ else :
     else:
       
       if st.session_state.title == None and st.session_state.tags==None:
-        title, tags = call_yt(url=url)
+        title, desc, tags = call_yt(url=url)
         st.session_state.title = title
         st.session_state.tags = tags
+        st.session_state.desc = desc
 
 ##########################################
       a, b, c = st.columns([2, 2, 2], vertical_alignment="center", border=True)
