@@ -6,6 +6,7 @@ from all_functions import (
     requests_set,
 )
 import time
+from autheticate import get_creds
 
     
 st.set_page_config(
@@ -123,15 +124,32 @@ def quiz():
 if st.user.is_logged_in != True:
   st.title(":material/lock: Please login To Continue")
 else :
-    st.title("QuizFlow.Ai", anchor=None)
     
+    if "mg_token" not in st.session_state:
+        st.session_state["mg_token"] = {
+            "access_token": None,
+            "token_type": None,
+            "expires_in": None,
+            "timestamp": None
+    }
+
+    if "user_token" not in st.session_state:
+        st.session_state["user_token"] = {
+            "user_token": None,
+            "expires_in": None,
+            "timestamp": None
+    }
+
+    if "cred" not in st.session_state:
+        st.session_state.cred = ""
+
+    st.title("QuizFlow.Ai", help = "", anchor=None)
+
     creds = st.session_state.get("cred")
-    if creds == None :
-        creds_alert = st.toast("**Please Wait in the Homepage till connection established**", icon="⚠️")
-        time.sleep(2)
-        creds_alert.toast(f"**Switching**",icon="⏪")
-        time.sleep(0.5)
-        st.switch_page("Welcome_Here.py")
+    
+    if creds == "" :
+        creds = get_creds()
+
     
     text = st.text_input(f"**Type a few Topics** ↘️",max_chars=100, placeholder="Min. 20 words for accurate quiz generation", key="my_text")
     

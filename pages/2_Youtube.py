@@ -16,11 +16,11 @@ import time
 from yt_dlp import YoutubeDL
 import uuid
 from yt_dlp.utils import DownloadError
+from autheticate import get_creds
 
 
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())[:8]
-
     
 st.set_page_config(
     page_title="QuizFlow.Ai",
@@ -30,19 +30,36 @@ st.set_page_config(
 )
 
 
+
 if st.user.is_logged_in != True:
   st.title(":material/lock: Please login To Continue")
+
 else :
   
+  if "mg_token" not in st.session_state:
+      st.session_state["mg_token"] = {
+          "access_token": None,
+          "token_type": None,
+          "expires_in": None,
+          "timestamp": None
+  }
+
+  if "user_token" not in st.session_state:
+      st.session_state["user_token"] = {
+          "user_token": None,
+          "expires_in": None,
+          "timestamp": None
+  }
+
+  if "cred" not in st.session_state:
+      st.session_state.cred = ""
+
   st.title("QuizFlow.Ai", help = "", anchor=None)
     
   creds = st.session_state.get("cred")
-  if creds == None :
-    creds_alert = st.toast("**Please Wait in the Homepage till connection established**", icon="⚠️")
-    time.sleep(2)
-    creds_alert.toast(f"**Switching**",icon="⏪")
-    time.sleep(0.5)
-    st.switch_page("Welcome_Here.py")
+  if creds == "" :
+    creds = get_creds()
+    
 ###########################################################################
 #SESSION STATES
 
@@ -102,7 +119,7 @@ else :
   with a:
     url = st.text_input("**Paste YouTube URL** ↘️", value="", max_chars=100, key="yt_url", type="default", autocomplete=None, on_change=None, args=None, kwargs=None, placeholder="https://www.youtube.com/watch?v=8t7MUD87_Kc", disabled=False, label_visibility="visible", icon=None, width="stretch", help="YouTube API is much faster than Downloading, but it maybe less accurate. If Downloading fails try with YouTube API")
   with b:
-    selection = st.pills(label="", options=["Download :material/cloud_download:","YouTube API :material/bolt:"],selection_mode="single",default="Download :material/cloud_download:",key="selection_pills")
+    selection = st.pills(label=" ", options=["Download :material/cloud_download:","YouTube API :material/bolt:"],selection_mode="single",default="Download :material/cloud_download:",key="selection_pills")
 
 
   @st.cache_resource
