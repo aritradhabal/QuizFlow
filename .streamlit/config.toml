@@ -13,24 +13,15 @@ style = "normal"
 
 
 [[theme.fontFaces]]
-family = "Open Sans"
-url = "https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
-style = "normal"
-
-[[theme.fontFaces]]
 family = "Source Code Pro"
 url = "https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap"
 style = "normal"
 
-# [theme]
-# font = "Geist, 'Source Serif 4'"
-# codeFont = "GeistMono, 'Source Code Pro'"
-# baseRadius = "0.5rem"
-
 [theme]
-font = "'Open Sans'"
-codeFont = "'Source Code Pro'"
+font = "Geist, sans-serif"
+codeFont = "GeistMono, 'Source Code Pro'"
 baseRadius = "0.5rem"
+
 
 [theme.sidebar]
 baseRadius = "small"
