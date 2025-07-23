@@ -28,7 +28,7 @@ style = "normal"
 # baseRadius = "0.5rem"
 
 [theme]
-font = "'Source Serif 4'"
+font = "'Source Code Pro'"
 codeFont = "'Source Code Pro'"
 baseRadius = "0.5rem"
 
