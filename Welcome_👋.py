@@ -104,4 +104,35 @@ else:
                     st.session_state.user_data_youtube = fetching_curated(st.user.email, "YouTube")
                 buttons(st.session_state.user_data_youtube)
                 
-            
+
+footer = """
+<style>
+.footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: white;
+    color: black;
+    text-align: right;
+    padding: 10px;
+    box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+    border-top-left-radius: 8px;
+}
+.footer a {
+    display: block;
+    text-align: right;
+    text-decoration: none;
+    color: black;
+    font-size: 12px;
+}
+.footer a:hover {
+    text-decoration: underline;
+}
+</style>
+
+<div class="footer">
+    <a href="https://quizflow-tos.streamlit.app/" target="_blank">Terms of Service</a>
+    <a href="https://quizflow-privacypolicy.streamlit.app/" target="_blank">Privacy Policy</a>
+</div>
+"""
+st.markdown(footer,unsafe_allow_html=True)
