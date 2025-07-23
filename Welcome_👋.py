@@ -109,7 +109,7 @@ footer = """
 <style>
 .footer {
     position: fixed;
-    bottom: 0;
+    bottom: 20px;
     right: 0;
     background-color: white;
     color: black;
