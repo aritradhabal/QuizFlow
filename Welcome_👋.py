@@ -109,8 +109,8 @@ footer = """
 <style>
 .footer {
     position: fixed;
-    bottom: 10;
-    right: 0;
+    bottom: 0;
+    left: 0;
     background-color: white;
     color: black;
     text-align: right;
