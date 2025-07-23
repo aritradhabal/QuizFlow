@@ -3,12 +3,14 @@ enableStaticServing = true
 
 [[theme.fontFaces]]
 family = "Geist"
-url = "static/Geist-VariableFont_wght.ttf"
+# url = "static/Geist-VariableFont_wght.ttf"
+url = "https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap"
 style = "normal"
 
 [[theme.fontFaces]]
 family = "GeistMono"
-url = "app/static/GeistMono-VariableFont_wght.ttf"
+# url = "app/static/GeistMono-VariableFont_wght.ttf"
+url = "https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap"
 style = "normal"
 
 [theme]
