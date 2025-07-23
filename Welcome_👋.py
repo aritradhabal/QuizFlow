@@ -1,5 +1,5 @@
 import streamlit as st
-from autheticate import get_creds
+from authenticate import get_creds
 
     
 st.set_page_config(

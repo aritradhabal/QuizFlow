@@ -6,7 +6,7 @@ from all_functions import (
     requests_set,
 )
 import time
-from autheticate import get_creds
+from authenticate import get_creds
 
     
 st.set_page_config(

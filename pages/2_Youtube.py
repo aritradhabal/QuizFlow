@@ -16,7 +16,7 @@ import time
 from yt_dlp import YoutubeDL
 import uuid
 from yt_dlp.utils import DownloadError
-from autheticate import get_creds
+from authenticate import get_creds
 
 
 if "session_id" not in st.session_state:
