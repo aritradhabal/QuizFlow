@@ -1,7 +1,8 @@
 import streamlit as st
 from authenticate import get_creds
 from database import fetching_, buttons, fetching_curated
-    
+import time
+
 st.set_page_config(
     page_title="QuizFlow.Ai",
     page_icon="📋",
@@ -65,7 +66,7 @@ else:
     
     with e:
         if st.button(":material/wand_stars: Generate Yours", key = "switch", use_container_width=True,type="primary"):
-            st.switch_page("pages/2_Youtube.py")
+            st.switch_page("pages/2_Youtube_🎧.py")
             
     with e:
         st.button(
@@ -84,19 +85,23 @@ else:
         st.session_state.user_data_youtube = None
 
     with st.sidebar:
-        selected_val = st.selectbox(f"**Your Quizzes**", ["All", "Topics", "YouTube"], index=0, key="selecting_db", on_change=None, placeholder=None, width="stretch")
-        
-        if selected_val == "All":
-            if st.session_state.user_data_all is None:
-                st.session_state.user_data_all = fetching_(st.user.email)
-            buttons(st.session_state.user_data_all)
-        if selected_val == "Topics":
-            if st.session_state.user_data_topics is None:
-                st.session_state.user_data_topics = fetching_curated(st.user.email, "Topics")
-            buttons(st.session_state.user_data_topics)
-        if selected_val == "YouTube":
-            if st.session_state.user_data_youtube is None:
-                st.session_state.user_data_youtube = fetching_curated(st.user.email, "YouTube")
-            buttons(st.session_state.user_data_youtube)
+        if not fetching_(st.user.email):
+            time.sleep(1)
+            st.toast(f"**Welcome {st.user.given_name}! Try creating your first quiz**", icon="🙌")
+        else:
+            selected_val = st.selectbox(f"**Your Quizzes**", ["All", "Topics", "YouTube"], index=0, key="selecting_db", on_change=None, placeholder=None, width="stretch")
             
+            if selected_val == "All":
+                if st.session_state.user_data_all is None:
+                    st.session_state.user_data_all = fetching_(st.user.email)
+                buttons(st.session_state.user_data_all)
+            if selected_val == "Topics":
+                if st.session_state.user_data_topics is None:
+                    st.session_state.user_data_topics = fetching_curated(st.user.email, "Topics")
+                buttons(st.session_state.user_data_topics)
+            if selected_val == "YouTube":
+                if st.session_state.user_data_youtube is None:
+                    st.session_state.user_data_youtube = fetching_curated(st.user.email, "YouTube")
+                buttons(st.session_state.user_data_youtube)
+                
             

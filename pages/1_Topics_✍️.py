@@ -7,6 +7,7 @@ from all_functions import (
 )
 import time
 from authenticate import get_creds
+from database import inserting_, fetching_, buttons, fetching_curated
 
     
 st.set_page_config(
@@ -42,6 +43,13 @@ if "medium_qs_num_last_topics" not in st.session_state:
     st.session_state.medium_qs_num_last_topics = None
 if "hard_qs_num_last_topics" not in st.session_state:
     st.session_state.hard_qs_num_last_topics = None
+    
+if "value_topic" not in st.session_state:
+    st.session_state.value_topic = None
+    
+if "placeholder" not in st.session_state:
+    st.session_state.placeholder = "Min. 20 words for accurate quiz generation"
+    
 ###########################################################################
 
 
@@ -57,6 +65,8 @@ def btn1_topics():
     else:
         st.session_state.last_text = text
         st.session_state.btn1_topics_clicked = True
+        st.session_state.btn2_topics_clicked = False
+        st.session_state.value_topic = None
 
 
 def btn2_topics():
@@ -108,13 +118,16 @@ def quiz():
         quiz_status.update(
             label="Completed", state="complete", expanded=False
         )
-        time.sleep(1.5)
-        quiz_status.empty()
+        time.sleep(1)
         
-
         FormID = get_result["formId"]
         ResponderURL = get_result["responderUri"]
-        
+        doc_title = get_result["info"]["documentTitle"]
+
+        bool = inserting_(email=st.user.email, form_title=doc_title, form_url=ResponderURL, form_edit_url=f"https://docs.google.com/forms/d/{FormID}/edit", origin="Topics")
+        if bool:
+            st.session_state.user_data_topics = None
+        quiz_status.empty()
         return FormID, ResponderURL
 
 
@@ -150,9 +163,9 @@ else :
     if creds == "" :
         creds = get_creds()
 
-    
-    text = st.text_input(f"**Type a few Topics** ↘️",max_chars=100, placeholder="Min. 20 words for accurate quiz generation", key="my_text")
-    
+
+    text = st.text_input(f"**Type a few Topics** ↘️",max_chars=100, placeholder=st.session_state.placeholder, key="my_text")
+
     a, b, c, d, e, f, g, h, i = st.columns(
             [1, 2, 3, 4, 5, 4, 3, 2, 1], vertical_alignment="center"
     )
@@ -163,6 +176,58 @@ else :
             use_container_width=True,
             type=st.session_state.btn1_topics_color,
         )
+    ##############################################################
+    
+      
+    if "user_data_all" not in st.session_state:
+        st.session_state.user_data_all = None
+    if "user_data_topics" not in st.session_state:
+        st.session_state.user_data_topics = None
+    if "user_data_youtube" not in st.session_state:
+        st.session_state.user_data_youtube = None
+    if "selected_val_topics" not in st.session_state:
+        st.session_state.selected_val_topics = 1
+    
+    ###########################################################################
+
+    with st.sidebar:
+        selected_val = st.selectbox(f"**Your Quizzes**", ["All", "Topics", "YouTube"], index=st.session_state.selected_val_topics, key="selecting_db", on_change=None, placeholder=None, width="stretch")
+
+
+        if selected_val == "All":
+            if st.session_state.user_data_all is None or selected_val != st.session_state.selected_val_topics:
+                all_data_yt = fetching_(st.user.email)
+                if all_data_yt == []:
+                    st.write("**Nothing to display here!**")
+                else: 
+                    st.session_state.user_data_all = all_data_yt
+                    buttons(st.session_state.user_data_all)
+        if selected_val == "Topics":
+            if st.session_state.user_data_topics is None or selected_val != st.session_state.selected_val_topics:
+                user_data_topics_yt = fetching_curated(st.user.email, "Topics")
+                if user_data_topics_yt == []:
+                    st.write("**Try creating your first quiz!**")
+                else:
+                    st.session_state.user_data_topics = user_data_topics_yt
+                    buttons(st.session_state.user_data_topics)
+        if selected_val == "YouTube":
+            if st.session_state.user_data_youtube is None or selected_val != st.session_state.selected_val_topics:
+                user_data_youtube_yt = fetching_curated(st.user.email, "YouTube")
+                if user_data_youtube_yt == []:
+                    st.write("**Nothing to display here!**")
+                else:
+                    st.session_state.user_data_youtube = user_data_youtube_yt
+                    buttons(st.session_state.user_data_youtube)
+
+
+    
+    
+    
+    
+    
+    
+    ##################################################################
+    
     if st.session_state.btn1_topics_clicked == True:
         
         ############################################################
@@ -238,7 +303,11 @@ else :
                 type="primary",
             )
         if st.session_state.btn2_topics_clicked == True:
-            
-            FormID, ResponderURL = quiz()
+            if st.session_state.value_topic == None:
+                st.session_state.value_topic = quiz()
+                st.session_state.placeholder = text
+                
+                st.rerun()
+            FormID, ResponderURL = st.session_state.value_topic
             st.markdown(f"### 📤 Share this Quiz: [{ResponderURL}]({ResponderURL})")
             st.markdown(f"### 📝 Edit Your Form: [https://docs.google.com/forms/d/{FormID}/edit](https://docs.google.com/forms/d/{FormID}/edit)")

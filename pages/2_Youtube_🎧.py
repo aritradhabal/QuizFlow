@@ -69,24 +69,39 @@ else :
       st.session_state.user_data_topics = None
   if "user_data_youtube" not in st.session_state:
       st.session_state.user_data_youtube = None
-      
+  if "placeholder_yt" not in st.session_state:
+      st.session_state.placeholder_yt = "https://www.youtube.com/watch?v=8t7MUD87_Kc"
+  if "selected_val_yt" not in st.session_state:
+      st.session_state.selected_val_yt = 2
 ###########################################################################
 
   with st.sidebar:
-    selected_val = st.selectbox(f"**Your Quizzes**", ["All", "Topics", "YouTube"], index=2, key="selecting_db", on_change=None, placeholder=None, width="stretch")
+    selected_val = st.selectbox(f"**Your Quizzes**", ["All", "Topics", "YouTube"], index=st.session_state.selected_val_yt, key="selecting_db", on_change=None, placeholder=None, width="stretch")
     
     if selected_val == "All":
-        if st.session_state.user_data_all is None:
-            st.session_state.user_data_all = fetching_(st.user.email)
-        buttons(st.session_state.user_data_all)
+        if st.session_state.user_data_all is None or selected_val != st.session_state.selected_val_yt:
+            all_data_yt = fetching_(st.user.email)
+            if all_data_yt == []:
+              st.write("**Nothing to display here!**")
+            else: 
+              st.session_state.user_data_all = all_data_yt
+              buttons(st.session_state.user_data_all)
     if selected_val == "Topics":
-        if st.session_state.user_data_topics is None:
-            st.session_state.user_data_topics = fetching_curated(st.user.email, "Topics")
-        buttons(st.session_state.user_data_topics)
+        if st.session_state.user_data_topics is None or selected_val != st.session_state.selected_val_yt:
+            user_data_topics_yt = fetching_curated(st.user.email, "Topics")
+            if user_data_topics_yt == []:
+              st.write("**Nothing to display here!**")
+            else :
+              st.session_state.user_data_topics = user_data_topics_yt
+              buttons(st.session_state.user_data_topics)
     if selected_val == "YouTube":
-        if st.session_state.user_data_youtube is None:
-            st.session_state.user_data_youtube = fetching_curated(st.user.email, "YouTube")
-        buttons(st.session_state.user_data_youtube)
+        if st.session_state.user_data_youtube is None or selected_val != st.session_state.selected_val_yt:
+            user_data_youtube_yt = fetching_curated(st.user.email, "YouTube")
+            if user_data_youtube_yt == []:
+              st.write("**Try creating your first quiz!**")
+            else:
+              st.session_state.user_data_youtube = user_data_youtube_yt
+              buttons(st.session_state.user_data_youtube)
 
 
 ###########################################################################
@@ -156,7 +171,7 @@ else :
   ###########################################################################
   a,b = st.columns([5,2], vertical_alignment="center")
   with a:
-    url = st.text_input("**Paste YouTube URL** ↘️", value="", max_chars=100, key="yt_url", type="default", autocomplete=None, on_change=None, args=None, kwargs=None, placeholder="https://www.youtube.com/watch?v=8t7MUD87_Kc", disabled=False, label_visibility="visible", icon=None, width="stretch", help="YouTube API is much faster than Downloading, but it maybe less accurate. If Downloading fails try with YouTube API")
+    url = st.text_input("**Paste YouTube URL** ↘️", value="", max_chars=100, key="yt_url", type="default", autocomplete=None, on_change=None, args=None, kwargs=None, placeholder=st.session_state.placeholder_yt, disabled=False, label_visibility="visible", icon=None, width="stretch", help="YouTube API is much faster than Downloading, but it maybe less accurate. If Downloading fails try with YouTube API")
   with b:
     selection = st.pills(label=" ", options=["Download :material/cloud_download:","YouTube API :material/bolt:"],selection_mode="single",default=st.session_state.selection_pills,key="_pills", width="stretch")
     if selection != st.session_state.selection_pills:
@@ -375,21 +390,22 @@ else :
       
       time.sleep(1.5)
       st.write("Creating Google Form :material/add_to_drive:")
-      get_result = auth_create(
+      
+      try :
+        get_result = auth_create(
           all_requests=all_requests,
           title=ai_generated_qs["title"],
           document_title=ai_generated_qs["document_title"],
           creds=creds
-      )
+        )
+      except Exception as e:
+          st.error(f"Error creating Google Form! Refreshing...", icon="⚠️")
+          time.sleep(1.5)
+          st.rerun()
       quiz_status.update(
           label="Completed", state="complete", expanded=False
       )
       time.sleep(1)
-  
-      # FormID = get_result["formId"]
-      # ResponderURL = get_result["responderUri"]
-      
-      # return FormID, ResponderURL
     
       FormID = get_result["formId"]
       ResponderURL = get_result["responderUri"]
@@ -398,6 +414,8 @@ else :
       bool = inserting_(email=st.user.email, form_title=doc_title, form_url=ResponderURL, form_edit_url=f"https://docs.google.com/forms/d/{FormID}/edit", origin="YouTube")
       if bool:
         st.session_state.user_data_youtube = None
+      
+      
       quiz_status.empty()
       return FormID, ResponderURL
 
@@ -445,6 +463,8 @@ else :
       bool = inserting_(email=st.user.email, form_title=doc_title, form_url=ResponderURL, form_edit_url=f"https://docs.google.com/forms/d/{FormID}/edit", origin="YouTube")
       if bool:
         st.session_state.user_data_youtube = None
+      
+      
       quiz_status.empty()
       return FormID, ResponderURL
 
@@ -551,6 +571,7 @@ else :
         if st.session_state.btn2_clicked == True:
           if st.session_state.value is None:
             st.session_state.value = quiz()
+            st.session_state.placeholder_yt = url
             st.rerun()
           FormID, ResponderURL = st.session_state.value
           st.markdown(f"### 📤 Share this Quiz: [{ResponderURL}]({ResponderURL})")
@@ -645,6 +666,7 @@ else :
       if st.session_state.btn2_ytclicked == True:
         if st.session_state.value_yt is None:
           st.session_state.value_yt = quiz_yt()
+          st.session_state.placeholder_yt = url
           st.rerun()
         FormID, ResponderURL = st.session_state.value_yt
         st.markdown(f"### 📤 Share this Quiz: [{ResponderURL}]({ResponderURL})")
