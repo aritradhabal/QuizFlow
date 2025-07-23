@@ -280,7 +280,7 @@ else :
       st.session_state.easy_qs_num_last = easy_qs_num
       st.session_state.medium_qs_num_last = med_qs_num
       st.session_state.hard_qs_num_last = hard_qs_num
-      st.session_state.btn2_ytclicked = True
+      st.session_state.btn2_clicked = True
           
     st.session_state.btn1_color = "secondary" 
 
