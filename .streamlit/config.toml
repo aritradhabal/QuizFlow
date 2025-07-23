@@ -22,9 +22,14 @@ family = "Source Code Pro"
 url = "https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap"
 style = "normal"
 
+# [theme]
+# font = "Geist, 'Source Serif 4'"
+# codeFont = "GeistMono, 'Source Code Pro'"
+# baseRadius = "0.5rem"
+
 [theme]
-font = "Geist, 'Source Serif 4'"
-codeFont = "GeistMono, 'Source Code Pro'"
+font = "'Source Serif 4'"
+codeFont = "'Source Code Pro'"
 baseRadius = "0.5rem"
 
 [theme.sidebar]
