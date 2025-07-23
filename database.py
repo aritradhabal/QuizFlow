@@ -13,7 +13,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_API)
 
 
 def buttons(data):
-    def delete():
+    def delete(id):
       data = supabase.table("Forms").delete().eq("id", id).execute()
       st.toast(f"**Form deleted successfully!**", icon="🗑️")
       st.session_state.user_data_all = None
@@ -31,7 +31,7 @@ def buttons(data):
       with col2:
           st.link_button(":material/contract_edit:", url=form_edit_url, type="secondary", use_container_width=True)
       with col3:
-          st.button(":material/delete:", key=f"deleteform_{id}", on_click=delete, type="secondary", use_container_width=True)
+          st.button(":material/delete:", key=f"delete_{id}", on_click=lambda id=id: delete(id), type="secondary", use_container_width=True)
 
 
 # data_insert = supabase.table("Forms").insert({"email":"aritradhabal@gmail.com", "form_title":"Example Form 3", "form_url": "http://example.com/form3", "form_edit_url": "http://example.com/edit"}).execute()

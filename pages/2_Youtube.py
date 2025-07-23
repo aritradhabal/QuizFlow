@@ -166,7 +166,8 @@ else :
   def load_model():
       model = whisper.load_model("base")
       return model
-  model = load_model()
+  if selection == "Download :material/cloud_download:":
+    model = load_model()
 
   def is_youtube_url(): # this function is used in the first button to determine is the text is actually a link or not
       if not url or not isinstance(url, str):
@@ -311,6 +312,7 @@ else :
       st.session_state.value_yt = None
     
       st.session_state.btn1_clicked = True
+      st.session_state.transcription = None
       st.session_state.link_valid = is_youtube_url()    
       st.session_state.btn2_clicked = False
       st.session_state.btn2_ytclicked = False
@@ -382,13 +384,21 @@ else :
       quiz_status.update(
           label="Completed", state="complete", expanded=False
       )
-      time.sleep(1.5)
-      quiz_status.empty()
+      time.sleep(1)
+  
+      # FormID = get_result["formId"]
+      # ResponderURL = get_result["responderUri"]
       
-
+      # return FormID, ResponderURL
+    
       FormID = get_result["formId"]
       ResponderURL = get_result["responderUri"]
-      
+      doc_title = get_result["info"]["documentTitle"]
+
+      bool = inserting_(email=st.user.email, form_title=doc_title, form_url=ResponderURL, form_edit_url=f"https://docs.google.com/forms/d/{FormID}/edit", origin="YouTube")
+      if bool:
+        st.session_state.user_data_youtube = None
+      quiz_status.empty()
       return FormID, ResponderURL
 
 
@@ -539,7 +549,10 @@ else :
                 type="primary",
             )
         if st.session_state.btn2_clicked == True:
-          FormID, ResponderURL = quiz()
+          if st.session_state.value is None:
+            st.session_state.value = quiz()
+            st.rerun()
+          FormID, ResponderURL = st.session_state.value
           st.markdown(f"### 📤 Share this Quiz: [{ResponderURL}]({ResponderURL})")
           st.markdown(f"### 📝 Edit Your Form: [https://docs.google.com/forms/d/{FormID}/edit](https://docs.google.com/forms/d/{FormID}/edit)")
 
