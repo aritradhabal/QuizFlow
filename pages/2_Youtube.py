@@ -150,7 +150,7 @@ else :
     st.session_state.value = None
 
   if "selection_pills" not in st.session_state:
-    st.session_state.selection_pills = "Download :material/cloud_download:"
+    st.session_state.selection_pills = "YouTube API :material/bolt:"
     
     
   ###########################################################################
