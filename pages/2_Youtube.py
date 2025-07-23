@@ -17,6 +17,7 @@ from yt_dlp import YoutubeDL
 import uuid
 from yt_dlp.utils import DownloadError
 from authenticate import get_creds
+from database import inserting_, fetching_, buttons, fetching_curated
 
 
 if "session_id" not in st.session_state:
@@ -54,12 +55,40 @@ else :
   if "cred" not in st.session_state:
       st.session_state.cred = ""
 
+  
   st.title("QuizFlow.Ai", help = "", anchor=None)
     
   creds = st.session_state.get("cred")
   if creds == "" :
     creds = get_creds()
+    ###########################################################################
+  
+  if "user_data_all" not in st.session_state:
+      st.session_state.user_data_all = None
+  if "user_data_topics" not in st.session_state:
+      st.session_state.user_data_topics = None
+  if "user_data_youtube" not in st.session_state:
+      st.session_state.user_data_youtube = None
+      
+###########################################################################
+
+  with st.sidebar:
+    selected_val = st.selectbox(f"**Your Quizzes**", ["All", "Topics", "YouTube"], index=2, key="selecting_db", on_change=None, placeholder=None, width="stretch")
     
+    if selected_val == "All":
+        if st.session_state.user_data_all is None:
+            st.session_state.user_data_all = fetching_(st.user.email)
+        buttons(st.session_state.user_data_all)
+    if selected_val == "Topics":
+        if st.session_state.user_data_topics is None:
+            st.session_state.user_data_topics = fetching_curated(st.user.email, "Topics")
+        buttons(st.session_state.user_data_topics)
+    if selected_val == "YouTube":
+        if st.session_state.user_data_youtube is None:
+            st.session_state.user_data_youtube = fetching_curated(st.user.email, "YouTube")
+        buttons(st.session_state.user_data_youtube)
+
+
 ###########################################################################
 #SESSION STATES
 
@@ -114,13 +143,24 @@ else :
 
   if "btn2_ytclicked" not in st.session_state:
     st.session_state.btn2_ytclicked = False
+  
+  if "value_yt" not in st.session_state:
+    st.session_state.value_yt = None
+  if "value" not in st.session_state:
+    st.session_state.value = None
+
+  if "selection_pills" not in st.session_state:
+    st.session_state.selection_pills = "Download :material/cloud_download:"
+    
+    
   ###########################################################################
-  a,b = st.columns([6,2], vertical_alignment="center")
+  a,b = st.columns([5,2], vertical_alignment="center")
   with a:
     url = st.text_input("**Paste YouTube URL** ↘️", value="", max_chars=100, key="yt_url", type="default", autocomplete=None, on_change=None, args=None, kwargs=None, placeholder="https://www.youtube.com/watch?v=8t7MUD87_Kc", disabled=False, label_visibility="visible", icon=None, width="stretch", help="YouTube API is much faster than Downloading, but it maybe less accurate. If Downloading fails try with YouTube API")
   with b:
-    selection = st.pills(label=" ", options=["Download :material/cloud_download:","YouTube API :material/bolt:"],selection_mode="single",default="Download :material/cloud_download:",key="selection_pills")
-
+    selection = st.pills(label=" ", options=["Download :material/cloud_download:","YouTube API :material/bolt:"],selection_mode="single",default=st.session_state.selection_pills,key="_pills", width="stretch")
+    if selection != st.session_state.selection_pills:
+      st.session_state.selection_pills = selection
 
   @st.cache_resource
   def load_model():
@@ -263,14 +303,22 @@ else :
 
   def btn1():
     
-    if url != st.session_state.last_url:
+    if url != st.session_state.last_url and len(url)>0:
       st.session_state.transcription = None
       st.session_state.last_url = url
-    
-    st.session_state.btn1_clicked = True
-    st.session_state.link_valid = is_youtube_url()    
-    
 
+      st.session_state.value = None
+      st.session_state.value_yt = None
+    
+      st.session_state.btn1_clicked = True
+      st.session_state.link_valid = is_youtube_url()    
+      st.session_state.btn2_clicked = False
+      st.session_state.btn2_ytclicked = False
+      
+      st.session_state.title = None
+      st.session_state.tags = None
+      st.session_state.desc = None
+      
   def btn2():
     if easy_qs != st.session_state.easy_qs_last or med_qs != st.session_state.medium_qs_last or hard_qs != st.session_state.hard_qs_last or easy_qs_num != st.session_state.easy_qs_num_last or med_qs_num != st.session_state.medium_qs_num_last or hard_qs_num != st.session_state.hard_qs_num_last:
       
@@ -378,13 +426,16 @@ else :
       quiz_status.update(
           label="Completed", state="complete", expanded=False
       )
-      time.sleep(1.5)
-      quiz_status.empty()
+      time.sleep(1)
       
-
       FormID = get_result["formId"]
       ResponderURL = get_result["responderUri"]
-      
+      doc_title = get_result["info"]["documentTitle"]
+
+      bool = inserting_(email=st.user.email, form_title=doc_title, form_url=ResponderURL, form_edit_url=f"https://docs.google.com/forms/d/{FormID}/edit", origin="YouTube")
+      if bool:
+        st.session_state.user_data_youtube = None
+      quiz_status.empty()
       return FormID, ResponderURL
 
 
@@ -500,7 +551,7 @@ else :
 
     else:
       
-      if st.session_state.title == None and st.session_state.tags==None:
+      if st.session_state.title == None and st.session_state.tags==None and st.session_state.desc == None:
         title, desc, tags = call_yt(url=url)
         st.session_state.title = title
         st.session_state.tags = tags
@@ -579,9 +630,12 @@ else :
               type="primary",
           )
       if st.session_state.btn2_ytclicked == True:
-        FormID, ResponderURL = quiz_yt()
+        if st.session_state.value_yt is None:
+          st.session_state.value_yt = quiz_yt()
+          st.rerun()
+        FormID, ResponderURL = st.session_state.value_yt
         st.markdown(f"### 📤 Share this Quiz: [{ResponderURL}]({ResponderURL})")
         st.markdown(f"### 📝 Edit Your Form: [https://docs.google.com/forms/d/{FormID}/edit](https://docs.google.com/forms/d/{FormID}/edit)")
-
+        
 
 

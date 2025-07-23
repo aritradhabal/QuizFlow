@@ -1,6 +1,6 @@
 import streamlit as st
 from authenticate import get_creds
-
+from database import fetching_, buttons, fetching_curated
     
 st.set_page_config(
     page_title="QuizFlow.Ai",
@@ -53,7 +53,7 @@ else:
 
     if "cred" not in st.session_state:
         st.session_state.cred = ""
-
+    
 
     a , b = st.columns([1, 1], vertical_alignment="center")
     with a:
@@ -75,3 +75,28 @@ else:
         )
 
     get_creds()
+    
+    if "user_data_all" not in st.session_state:
+        st.session_state.user_data_all = None
+    if "user_data_topics" not in st.session_state:
+        st.session_state.user_data_topics = None
+    if "user_data_youtube" not in st.session_state:
+        st.session_state.user_data_youtube = None
+
+    with st.sidebar:
+        selected_val = st.selectbox(f"**Your Quizzes**", ["All", "Topics", "YouTube"], index=0, key="selecting_db", on_change=None, placeholder=None, width="stretch")
+        
+        if selected_val == "All":
+            if st.session_state.user_data_all is None:
+                st.session_state.user_data_all = fetching_(st.user.email)
+            buttons(st.session_state.user_data_all)
+        if selected_val == "Topics":
+            if st.session_state.user_data_topics is None:
+                st.session_state.user_data_topics = fetching_curated(st.user.email, "Topics")
+            buttons(st.session_state.user_data_topics)
+        if selected_val == "YouTube":
+            if st.session_state.user_data_youtube is None:
+                st.session_state.user_data_youtube = fetching_curated(st.user.email, "YouTube")
+            buttons(st.session_state.user_data_youtube)
+            
+            

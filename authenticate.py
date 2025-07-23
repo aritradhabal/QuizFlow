@@ -187,8 +187,8 @@ def creds_():
             st.logout()
             st.rerun()
         
-    else :
-        st.toast(f"**Welcome Back {st.user['given_name']}!**")
+    # else :
+    #     st.toast(f"**Welcome Back {st.user['given_name']}!**")
     return st.session_state.cred
 
 def get_creds():
