@@ -362,16 +362,24 @@ def call_yt(url):
         # title = response["items"][0]["snippet"]["title"]
         # desc = response['items'][0]['snippet']["description"]
         # tags = response['items'][0]['snippet']['tags']
-        title = response.get("items", [{}])[0].get("snippet", {}).get("title", " ")
-        desc = response.get("items", [{}])[0].get("snippet", {}).get("description", " ")
-        tags = response.get("items", [{}])[0].get("snippet", {}).get("tags", ["quiz"])
+        try :
+            title = response.get("items", [{}])[0].get("snippet", {}).get("title", " ")
+            desc = response.get("items", [{}])[0].get("snippet", {}).get("description", " ")
+            tags = response.get("items", [{}])[0].get("snippet", {}).get("tags", ["quiz"])
 
-        tags = tags_string(tags)
-        return [title, desc, tags]
+            tags = tags_string(tags)
+            return [title, desc, tags]
+        
+        except Exception as e:
+            st.toast(f"**An error occurred! Make sure the video actually exist.**", icon="🔁")
+            st.stop()
 
     except googleapiclient.errors.HttpError as e:
         st.toast(f"**Can not get the video ID. Make sure the video ID publicly exist.**")
         print(e)
+        st.stop()
+    except Exception as e:
+        st.toast(f"**An error occurred! Make sure the video actually exist.**", icon="🔁")
         st.stop()
 
 

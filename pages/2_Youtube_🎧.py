@@ -183,6 +183,8 @@ else :
   if "query_value" not in st.session_state:
     st.session_state.query_value = "" 
   
+  if "changed" not in st.session_state:
+    st.session_state.changed = False
   
   
   if len(st.query_params) > 0:
@@ -270,6 +272,7 @@ else :
         st.session_state.selection_pills = "YouTube API :material/bolt:"
         time.sleep(1.5)
         st.session_state.btn1_clicked = False
+        st.session_state.changed = True
         st.rerun()
 
       except Exception as e:
@@ -279,6 +282,7 @@ else :
         st.session_state.query_value = url
         st.session_state.selection_pills = "YouTube API :material/bolt:"
         st.session_state.btn1_clicked = False
+        st.session_state.changed = True
         time.sleep(1.5)
         st.rerun()
       
@@ -351,7 +355,7 @@ else :
 
   def btn1():
     
-    if url != st.session_state.last_url and len(url)>0:
+    if (url != st.session_state.last_url and len(url)>0) or st.session_state.changed == True:
       st.session_state.transcription = None
       st.session_state.last_url = url
 
