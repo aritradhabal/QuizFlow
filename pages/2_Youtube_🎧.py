@@ -33,8 +33,19 @@ st.set_page_config(
 
 
 if st.user.is_logged_in != True:
+  def login():
+    st.login("auth0")
+  
   st.title(":material/lock: Please login To Continue")
-
+  st.markdown("")
+  a, b, c, d, e, f, g, h, i = st.columns([1, 2, 3, 4, 5, 4, 3, 2, 1], vertical_alignment="center")
+  with e:
+      st.button(
+              ":material/login: Log in", key = "login",
+              on_click=login,
+              use_container_width=True,
+              type="primary",
+          )
 else :
   
   if "mg_token" not in st.session_state:
@@ -166,22 +177,33 @@ else :
 
   if "selection_pills" not in st.session_state:
     st.session_state.selection_pills = "YouTube API :material/bolt:"
+  if "model_loaded" not in st.session_state:
+    st.session_state.model_loaded = False
     
-    
+  if "query_value" not in st.session_state:
+    st.session_state.query_value = "" 
+  
+  
+  
+  if len(st.query_params) > 0:
+      st.session_state.query_value = st.query_params['url']
+      
   ###########################################################################
   a,b = st.columns([5,2], vertical_alignment="center")
   with a:
-    url = st.text_input("**Paste YouTube URL** ↘️", value="", max_chars=100, key="yt_url", type="default", autocomplete=None, on_change=None, args=None, kwargs=None, placeholder=st.session_state.placeholder_yt, disabled=False, label_visibility="visible", icon=None, width="stretch", help="YouTube API is much faster than Downloading, but it maybe less accurate. If Downloading fails try with YouTube API")
+    url = st.text_input("**Paste YouTube URL** ↘️", value=st.session_state.query_value, max_chars=100, key="yt_url", type="default", autocomplete=None, on_change=None, args=None, kwargs=None, placeholder=st.session_state.placeholder_yt, disabled=False, label_visibility="visible", icon=None, width="stretch", help="YouTube API is much faster than Downloading, but it maybe less accurate. If Downloading fails try with YouTube API")
   with b:
     selection = st.pills(label=" ", options=["Download :material/cloud_download:","YouTube API :material/bolt:"],selection_mode="single",default=st.session_state.selection_pills,key="_pills", width="stretch")
     if selection != st.session_state.selection_pills:
       st.session_state.selection_pills = selection
 
+  
   @st.cache_resource
   def load_model():
       model = whisper.load_model("base")
+      st.session_state.model_loaded = True
       return model
-  if selection == "Download :material/cloud_download:":
+  if selection == "Download :material/cloud_download:" and st.session_state.model_loaded == False:
     model = load_model()
 
   def is_youtube_url(): # this function is used in the first button to determine is the text is actually a link or not
