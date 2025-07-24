@@ -200,7 +200,7 @@ else :
   
   @st.cache_resource
   def load_model():
-      model = whisper.load_model("base")
+      model = whisper.load_model("base.pt")
       st.session_state.model_loaded = True
       return model
   if selection == "Download :material/cloud_download:" and st.session_state.model_loaded == False:
