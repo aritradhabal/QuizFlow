@@ -178,7 +178,7 @@ else :
   if "selection_pills" not in st.session_state:
     st.session_state.selection_pills = "YouTube API :material/bolt:"
   if "model_loaded" not in st.session_state:
-    st.session_state.model_loaded = False
+    st.session_state.model_loaded = None
     
   if "query_value" not in st.session_state:
     st.session_state.query_value = "" 
@@ -198,14 +198,16 @@ else :
       st.session_state.selection_pills = selection
 
   
-  @st.cache_resource
+
   def load_model():
       model = whisper.load_model("base.pt")
-      st.session_state.model_loaded = True
-      return model
-  if selection == "Download :material/cloud_download:" and st.session_state.model_loaded == False:
+      st.session_state.model_loaded = model
+      return st.session_state.model_loaded
+  if selection == "Download :material/cloud_download:" and st.session_state.model_loaded == None:
     model = load_model()
-
+  else:
+    model = st.session_state.model_loaded 
+  # -------------------------------------------------
   def is_youtube_url(): # this function is used in the first button to determine is the text is actually a link or not
       if not url or not isinstance(url, str):
           return False
@@ -262,15 +264,23 @@ else :
         with YoutubeDL(ydl_opts) as ydl:
             ydl.download([URL])
       except DownloadError as e:
-        st.toast(f"**Failed to download video. Fetching through YouTube Data API.**", icon="🔁")
-        url = ""
+        st.toast(f"**Failed to download video. Try Fetching through YouTube Data API.**", icon="🔁")
         st.session_state.last_url = url
-        st.stop()
+        st.session_state.query_value = url
+        st.session_state.selection_pills = "YouTube API :material/bolt:"
+        time.sleep(1.5)
+        st.session_state.btn1_clicked = False
+        st.rerun()
+
       except Exception as e:
-        st.toast(f"**Failed to download video. Fetching through YouTube Data API.**", icon="🔁")
-        url = ""
+        st.toast(f"**Failed to download video. Try Fetching through YouTube Data API.**", icon="🔁")
+        st.warning(f"**Downloading Method work on streamlit hosted website only.**", icon="⚠️")
         st.session_state.last_url = url
-        st.stop()
+        st.session_state.query_value = url
+        st.session_state.selection_pills = "YouTube API :material/bolt:"
+        st.session_state.btn1_clicked = False
+        time.sleep(1.5)
+        st.rerun()
       
       return temp_filepath
 
