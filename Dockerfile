@@ -17,5 +17,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY .streamlit /root/.streamlit
 COPY . .
 
+RUN python -c "import whisper; whisper.load_model('base')" && \
+    mv /.cache/whisper/base.pt . && \
+    rm -rf /.cache
+
 EXPOSE 8080
 CMD ["streamlit", "run", "--server.port=8080", "--server.enableCORS=false", "Welcome_👋.py"]
