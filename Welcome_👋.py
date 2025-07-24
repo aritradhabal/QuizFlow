@@ -131,8 +131,8 @@ footer = """
 </style>
 
 <div class="footer">
-    <a href="http://quizflow.me/QuizFlow#terms" target="_blank">Terms of Service</a>
-    <a href="http://quizflow.me/QuizFlow#privacy" target="_blank">Privacy Policy</a>
+    <a href="https://aritradhabal.github.io/QuizFlow#terms" target="_blank">Terms of Service</a>
+    <a href="https://aritradhabal.github.io/QuizFlow#privacy" target="_blank">Privacy Policy</a>
 </div>
 """
 st.markdown(footer,unsafe_allow_html=True)
