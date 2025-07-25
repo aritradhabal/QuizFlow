@@ -266,21 +266,22 @@ else :
         with YoutubeDL(ydl_opts) as ydl:
             ydl.download([URL])
       except DownloadError as e:
-        st.toast(f"**Failed to download video. Try Fetching through YouTube Data API.**", icon="🔁")
+        st.toast(f"**Failed to download video. Needs account cache. Try Fetching through YouTube Data API.**", icon="🔁")
+        st.warning(f"**Downloading Method works on [Streamlit hosted website](https://quizflow.streamlit.app/) only.**", icon="⚠️")
         st.session_state.last_url = url
         st.session_state.query_value = url
-        st.session_state.selection_pills = "YouTube API :material/bolt:"
+        del st.session_state['selection_pills']
         time.sleep(1.5)
         st.session_state.btn1_clicked = False
         st.session_state.changed = True
         st.rerun()
 
       except Exception as e:
-        st.toast(f"**Failed to download video. Try Fetching through YouTube Data API.**", icon="🔁")
-        st.warning(f"**Downloading Method work on streamlit hosted website only.**", icon="⚠️")
+        st.toast(f"**Failed to download video. Needs account cache. Try Fetching through YouTube Data API.**", icon="🔁")
+        st.warning(f"**Downloading Method works on [Streamlit hosted website](https://quizflow.streamlit.app/) only.**", icon="⚠️")
         st.session_state.last_url = url
         st.session_state.query_value = url
-        st.session_state.selection_pills = "YouTube API :material/bolt:"
+        del st.session_state['selection_pills']
         st.session_state.btn1_clicked = False
         st.session_state.changed = True
         time.sleep(1.5)
