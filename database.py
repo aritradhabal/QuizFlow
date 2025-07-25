@@ -76,7 +76,10 @@ def fetching_curated(email, origin):
 def update_last_login(email):
   now = round(time.time())
   prev = supabase.table("Forms").select("last_login").eq("email", email).limit(1).execute()
-  if prev.data[0]['last_login'] == None:
+  st.write(prev)
+  if prev.data == []:
+      pass
+  elif prev.data[0]['last_login']== None:
       data = supabase.table("Forms").update({"last_login": now}).eq("email", email).execute()
   else:
     if now > prev.data[0]["last_login"]+3600:
