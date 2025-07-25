@@ -17,7 +17,7 @@ from yt_dlp import YoutubeDL
 import uuid
 from yt_dlp.utils import DownloadError
 from authenticate import get_creds
-from database import inserting_, fetching_, buttons, fetching_curated
+from database import inserting_, fetching_, buttons, fetching_curated, update_last_login
 
 from menu import menu_with_redirect
 menu_with_redirect()
@@ -49,7 +49,7 @@ if st.user.is_logged_in != True:
               type="primary",
           )
 else :
-  
+  update_last_login(st.user.email)
   if "mg_token" not in st.session_state:
       st.session_state["mg_token"] = {
           "access_token": None,

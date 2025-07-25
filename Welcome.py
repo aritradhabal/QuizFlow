@@ -1,6 +1,6 @@
 import streamlit as st
 from authenticate import get_creds
-from database import fetching_, buttons, fetching_curated
+from database import fetching_, buttons, fetching_curated, update_last_login
 import time
 
 from menu import menu
@@ -106,7 +106,7 @@ if not st.user.is_logged_in:
     legal()
     
 else:
-    
+    update_last_login(st.user.email)
     if "mg_token" not in st.session_state:
         st.session_state["mg_token"] = {
             "access_token": None,

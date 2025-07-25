@@ -7,7 +7,7 @@ from all_functions import (
 )
 import time
 from authenticate import get_creds
-from database import inserting_, fetching_, buttons, fetching_curated
+from database import inserting_, fetching_, buttons, fetching_curated, update_last_login
 
 from menu import menu_with_redirect
 menu_with_redirect()
@@ -139,7 +139,7 @@ def quiz():
 if st.user.is_logged_in != True:
   st.title(":material/lock: Please login To Continue")
 else :
-    
+    update_last_login(st.user.email)
     if "mg_token" not in st.session_state:
         st.session_state["mg_token"] = {
             "access_token": None,

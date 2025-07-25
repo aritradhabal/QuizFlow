@@ -1,7 +1,7 @@
 import email
 import streamlit as st
 from supabase import create_client, Client
-
+import time
 
 SUPABASE_URL=st.secrets["db"]["supabase_url"]
 SUPABASE_API=st.secrets["db"]["supabase_api"]
@@ -72,3 +72,14 @@ def fetching_curated(email, origin):
     return False
 
   return email.data
+
+def update_last_login(email):
+  now = round(time.time())
+  prev = supabase.table("Forms").select("last_login").eq("email", email).limit(1).execute()
+  if prev.data[0]['last_login'] == None:
+      data = supabase.table("Forms").update({"last_login": now}).eq("email", email).execute()
+  else:
+    if now > prev.data[0]["last_login"]+3600:
+      data = supabase.table("Forms").update({"last_login": now}).eq("email", email).execute()
+    elif now > prev.data[0]["last_login"]+3300:
+      st.toast(f"**Your session will expire in less than 5 minutes! Make sure to save your work.**", icon="⚠️")
