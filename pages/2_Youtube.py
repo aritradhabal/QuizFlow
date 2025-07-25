@@ -19,6 +19,8 @@ from yt_dlp.utils import DownloadError
 from authenticate import get_creds
 from database import inserting_, fetching_, buttons, fetching_curated
 
+from menu import menu_with_redirect
+menu_with_redirect()
 
 if "session_id" not in st.session_state:
     st.session_state.session_id = str(uuid.uuid4())[:8]
@@ -266,25 +268,25 @@ else :
         with YoutubeDL(ydl_opts) as ydl:
             ydl.download([URL])
       except DownloadError as e:
-        st.toast(f"**Failed to download video. Needs account cache. Try Fetching through YouTube Data API.**", icon="🔁")
-        st.warning(f"**Downloading Method works on [Streamlit hosted website](https://quizflow.streamlit.app/) only.**", icon="⚠️")
+        st.toast(f"**Account cache needed!. Try using YouTube Data API.**", icon="↘️")
+        st.warning(f"**Downloading Method works on [Streamlit hosted website](https://quizflow.streamlit.app/) only.**", icon="🔗")
         st.session_state.last_url = url
         st.session_state.query_value = url
         del st.session_state['selection_pills']
-        time.sleep(1.5)
+        time.sleep(4)
         st.session_state.btn1_clicked = False
         st.session_state.changed = True
         st.rerun()
 
       except Exception as e:
-        st.toast(f"**Failed to download video. Needs account cache. Try Fetching through YouTube Data API.**", icon="🔁")
-        st.warning(f"**Downloading Method works on [Streamlit hosted website](https://quizflow.streamlit.app/) only.**", icon="⚠️")
+        st.toast(f"**Account cache needed!. Try using YouTube Data API.**", icon="↘️")
+        st.warning(f"**Downloading Method works on [Streamlit hosted website](https://quizflow.streamlit.app/) only.**", icon="🔗")
         st.session_state.last_url = url
         st.session_state.query_value = url
         del st.session_state['selection_pills']
         st.session_state.btn1_clicked = False
         st.session_state.changed = True
-        time.sleep(1.5)
+        time.sleep(4)
         st.rerun()
       
       return temp_filepath

@@ -3,6 +3,9 @@ from authenticate import get_creds
 from database import fetching_, buttons, fetching_curated
 import time
 
+from menu import menu
+menu()
+
 st.set_page_config(
     page_title="QuizFlow.Ai",
     page_icon="📋",
@@ -16,6 +19,70 @@ def login():
     st.login("auth0")
 def logout():
     st.logout()
+
+def legal():
+    if "privacy_policy" not in st.session_state:
+        st.session_state["privacy_policy"] = False
+    if "terms_of_service" not in st.session_state:
+        st.session_state["terms_of_service"] = False
+        
+    def privacy():
+        st.session_state["privacy_policy"] = True
+        
+    def terms():
+        st.session_state["terms_of_service"] = True
+        
+    st.button("Privacy Policy", key="privacy_", on_click=lambda: privacy(),use_container_width=True, type="tertiary")
+    st.button("Terms of Service", key="terms_", on_click=terms,use_container_width=True, type="tertiary")
+
+    st.markdown(
+        """<style>
+            .element-container:nth-of-type(4) button {
+                position: fixed;
+                bottom: 3rem;
+                right: 0;
+                # background-color: white;
+                # color: black;
+                text-align: right;
+                padding: 10px;
+                box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+                border-top-left-radius: 12px;   
+                display: block;
+                text-align: right;
+                text-decoration: none;
+                color: black;
+                font-size: 8px;
+                width: fit-content;
+            }
+            .element-container:nth-of-type(5) button {
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                background-color: white;
+                color: black;
+                text-align: right;
+                padding: 10px;
+                box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
+                border-top-left-radius: 12px;   
+                display: block;
+                text-align: right;
+                text-decoration: none;
+                color: black;
+                font-size: 8px;
+                width: fit-content;
+            }
+        
+            </style>""",
+        unsafe_allow_html=True,
+    )
+
+    if st.session_state["privacy_policy"]:
+        st.switch_page("pages/3_Privacy_Policy.py")
+        st.session_state["privacy_policy"] = False
+    if st.session_state["terms_of_service"]:
+        st.switch_page("pages/4_Terms_and_Conditions.py")
+        st.session_state["terms_of_service"] = False
+
 
 
 if not st.user.is_logged_in:
@@ -35,6 +102,9 @@ if not st.user.is_logged_in:
                 use_container_width=True,
                 type="primary",
             )
+    
+    legal()
+    
 else:
     
     if "mg_token" not in st.session_state:
@@ -66,7 +136,7 @@ else:
     
     with e:
         if st.button(":material/wand_stars: Generate Yours", key = "switch", use_container_width=True,type="primary"):
-            st.switch_page("pages/2_Youtube_🎧.py")
+            st.switch_page("pages/2_Youtube.py")
             
     with e:
         st.button(
@@ -105,34 +175,5 @@ else:
                 buttons(st.session_state.user_data_youtube)
                 
 
-footer = """
-<style>
-.footer {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    background-color: white;
-    color: black;
-    text-align: right;
-    padding: 10px;
-    box-shadow: 0 -1px 5px rgba(0,0,0,0.1);
-    border-top-left-radius: 8px;
-}
-.footer a {
-    display: block;
-    text-align: right;
-    text-decoration: none;
-    color: black;
-    font-size: 12px;
-}
-.footer a:hover {
-    text-decoration: underline;
-}
-</style>
 
-<div class="footer">
-    <a href="https://aritradhabal.github.io/QuizFlow#terms" target="_blank">Terms of Service</a>
-    <a href="https://aritradhabal.github.io/QuizFlow#privacy" target="_blank">Privacy Policy</a>
-</div>
-"""
-st.markdown(footer,unsafe_allow_html=True)
+

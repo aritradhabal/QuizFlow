@@ -1,5 +1,7 @@
 [server]
 enableStaticServing = false
+[client]
+showSidebarNavigation = false
 
 [[theme.fontFaces]]
 family = "Geist"

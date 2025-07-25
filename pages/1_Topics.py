@@ -9,6 +9,8 @@ import time
 from authenticate import get_creds
 from database import inserting_, fetching_, buttons, fetching_curated
 
+from menu import menu_with_redirect
+menu_with_redirect()
     
 st.set_page_config(
     page_title="QuizFlow.Ai",
