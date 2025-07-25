@@ -207,6 +207,7 @@ else :
       model = whisper.load_model("base.pt")
       st.session_state.model_loaded = model
       msg_model = st.toast("**Model Loaded Successfully!**", icon="✅")
+      time.sleep(1.5)
       msg_model.toast("**Downloading video may fail due to youtube restrictions.**", icon="⚠️")
       time.sleep(1.5)
       msg_model.empty()
