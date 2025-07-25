@@ -22,4 +22,4 @@ RUN python -c "import whisper; whisper.load_model('base')" && \
     rm -rf /root/.cache
 
 EXPOSE 8080
-CMD ["streamlit", "run", "--server.port=8080", "--server.enableCORS=false", "Welcome_👋.py"]
+CMD ["streamlit", "run", "--server.port=8080", "--server.enableCORS=false", "Welcome.py"]
