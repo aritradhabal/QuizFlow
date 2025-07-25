@@ -206,6 +206,7 @@ else :
   def load_model():
       model = whisper.load_model("base.pt")
       st.session_state.model_loaded = model
+      st.toast("**Model Loaded Successfully!**", icon="✅")
       return st.session_state.model_loaded
   if selection == "Download :material/cloud_download:" and st.session_state.model_loaded == None:
     model = load_model()
@@ -269,24 +270,24 @@ else :
             ydl.download([URL])
       except DownloadError as e:
         st.toast(f"**Account cache needed!. Try using YouTube Data API.**", icon="↘️")
-        st.warning(f"**Downloading Method works on [Streamlit hosted website](https://quizflow.streamlit.app/) only.**", icon="🔗")
+        st.warning(f"**Downloading Method only works on [Streamlit hosted website](https://quizflow.streamlit.app/).**", icon="🔗")
         st.session_state.last_url = url
         st.session_state.query_value = url
         del st.session_state['selection_pills']
-        time.sleep(4)
+        time.sleep(7)
         st.session_state.btn1_clicked = False
         st.session_state.changed = True
         st.rerun()
 
       except Exception as e:
         st.toast(f"**Account cache needed!. Try using YouTube Data API.**", icon="↘️")
-        st.warning(f"**Downloading Method works on [Streamlit hosted website](https://quizflow.streamlit.app/) only.**", icon="🔗")
+        st.warning(f"**Downloading Method only works on [Streamlit hosted website](https://quizflow.streamlit.app/).**", icon="🔗")
         st.session_state.last_url = url
         st.session_state.query_value = url
         del st.session_state['selection_pills']
         st.session_state.btn1_clicked = False
         st.session_state.changed = True
-        time.sleep(4)
+        time.sleep(7)
         st.rerun()
       
       return temp_filepath
