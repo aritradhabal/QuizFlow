@@ -37,7 +37,7 @@ def legal():
 
     st.markdown(
         """<style>
-            .element-container:nth-of-type(4) button {
+            .element-container:nth-of-type(5) button {
                 position: fixed;
                 bottom: 3rem;
                 right: 0;
@@ -54,7 +54,7 @@ def legal():
                 font-size: 8px;
                 width: fit-content;
             }
-            .element-container:nth-of-type(5) button {
+            .element-container:nth-of-type(6) button {
                 position: fixed;
                 bottom: 0;
                 right: 0;
@@ -92,7 +92,13 @@ if not st.user.is_logged_in:
         st.image("images/left.png",use_container_width=True)
     with b:
         st.image("images/right_login.png", use_container_width=True)
-
+    
+    with st.container(border=1):
+        st.write("**↘️ Please Use these Login Credentials, till Google verifies this app!**")
+        st.markdown(
+            "<b>Email:</b> testquizflow<span></span>@gmail.com <b>|</b> <b>Password:</b> testquizflow-user",
+            unsafe_allow_html=True
+        )
 
     a, b, c, d, e, f, g, h, i = st.columns([1, 2, 3, 4, 5, 4, 3, 2, 1], vertical_alignment="center")
     with e:
@@ -102,8 +108,8 @@ if not st.user.is_logged_in:
                 use_container_width=True,
                 type="primary",
             )
-    
     legal()
+    
     
 else:
     update_last_login(st.user.email)

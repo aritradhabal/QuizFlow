@@ -21,7 +21,7 @@ style = "normal"
 
 [theme]
 font = "Geist, sans-serif"
-codeFont = "GeistMono, 'Source Code Pro'"
+codeFont = "GeistMono, sans-serif, 'Source Code Pro'"
 baseRadius = "0.5rem"
 
 
