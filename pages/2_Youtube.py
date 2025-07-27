@@ -551,7 +551,7 @@ else :
                 "Number of Easy Questions",
                 key="e",
                 min_value=0,
-                max_value=20,
+                max_value=10,
                 value=5,
                 step=1,
             )
@@ -560,8 +560,8 @@ else :
                 "Number of Medium Questions",
                 key="m",
                 min_value=0,
-                max_value=20,
-                value=6,
+                max_value=10,
+                value=3,
                 step=1,
             )
         with c:
@@ -569,8 +569,8 @@ else :
                 "Number of Hard Questions",
                 key="h",
                 min_value=0,
-                max_value=20,
-                value=3,
+                max_value=10,
+                value=4,
                 step=1,
             )
 
@@ -646,7 +646,7 @@ else :
               "Number of Easy Questions",
               key="e",
               min_value=0,
-              max_value=20,
+              max_value=10,
               value=5,
               step=1,
           )
@@ -655,8 +655,8 @@ else :
               "Number of Medium Questions",
               key="m",
               min_value=0,
-              max_value=20,
-              value=6,
+              max_value=10,
+              value=3,
               step=1,
           )
       with c:
@@ -664,8 +664,8 @@ else :
               "Number of Hard Questions",
               key="h",
               min_value=0,
-              max_value=20,
-              value=3,
+              max_value=10,
+              value=4,
               step=1,
           )
 
